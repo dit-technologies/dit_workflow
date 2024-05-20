@@ -3,10 +3,6 @@ name: Laravel Testing Workflow
 on:
   workflow_call:
     inputs:
-      branches:
-        required: true
-        type: array
-        description: "Branches to trigger the workflow on"
       php_version:
         required: true
         type: string

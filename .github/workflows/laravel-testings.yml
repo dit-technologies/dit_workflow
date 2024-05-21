@@ -7,6 +7,15 @@ on:
         required: true
         type: string
         description: "PHP version to use"
+      isNodeEnabled:
+        required: false
+        type: boolean
+        default: false
+        description: "Whether to enable Node.js steps"
+      node_version:
+        required: false
+        type: string
+        description: "Node.js version to use if Node.js steps are enabled"
 
 jobs:
   tests:
@@ -37,6 +46,20 @@ jobs:
       - name: Get Changed Files
         id: changed-files
         uses: tj-actions/changed-files@v39
+      
+      - name: Install Node.js
+        if: ${{ inputs.isNodeEnabled }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ inputs.node_version }}
+
+      - name: Install NPM Dependencies
+        if: ${{ inputs.isNodeEnabled }}
+        run: npm install
+
+      - name: Run NPM Build
+        if: ${{ inputs.isNodeEnabled }}
+        run: npm run build
 
       - name: Run Pint
         run: |

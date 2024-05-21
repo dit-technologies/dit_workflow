@@ -55,14 +55,18 @@ jobs:
 
       - name: Install NPM Dependencies
         if: ${{ inputs.isNodeEnabled }}
-        run: npm install
+        run: |
+          npm install
 
       - name: Run NPM Build
         if: ${{ inputs.isNodeEnabled }}
-        run: npm run build
+        run: |
+          npm run build
 
       - name: Run Pint
         run: |
           ./vendor/bin/pint --test ${{ steps.changed-files.outputs.all_changed_files }}
+
       - name: Run PHPUnit Tests
-        run: php artisan test
+        run: |
+          php artisan test

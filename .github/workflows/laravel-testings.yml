@@ -77,21 +77,5 @@ jobs:
           ./vendor/bin/pint --test ${{ steps.changed-files.outputs.all_changed_files }}
 
       - name: Run PHPUnit Tests
-        id: tests
         run: |
-          OUTPUT=$(php artisan test)
-          echo "$OUTPUT"
-          echo "::set-output name=result::$OUTPUT"
-
-      - name: Check test results
-        run: |
-          if echo "${{ steps.tests.outputs.result }}" | grep -q 'failed'; then
-            echo "Tests failed."
-            exit 1
-          elif echo "${{ steps.tests.outputs.result }}" | grep -q 'passed'; then
-            echo "Tests passed."
-            exit 0
-          else
-            echo "Unexpected test results."
-            exit 1
-          fi
+          php artisan test

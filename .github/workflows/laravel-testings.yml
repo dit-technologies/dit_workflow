@@ -32,6 +32,15 @@ jobs:
           restore-keys: |
             composer-
 
+      - name: Cache Node Modules
+        if: ${{ inputs.isNodeEnabled }}
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}
+          restore-keys: |
+            node-
+
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:

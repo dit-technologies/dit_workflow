@@ -16,6 +16,18 @@ on:
         required: false
         type: string
         description: "Node.js version to use if Node.js steps are enabled"
+      sonar_token:
+        required: true
+        type: string
+        description: "SonarQube authentication token"
+      sonar_host_url:
+        required: true
+        type: string
+        description: "SonarQube server URL"
+      sonar_project_key:
+        required: true
+        type: string
+        description: "SonarQube project key"
 
 jobs:
   tests:
@@ -93,18 +105,18 @@ jobs:
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ inputs.SONAR_HOST_URL }}
         with:
           args: >
-            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            -Dsonar.projectKey=${{ inputs.SONAR_PROJECT_KEY }}
             -Dsonar.organization=dit-technologies
             -Dsonar.sources=.
             -Dsonar.exclusions=vendor/**
             -Dsonar.tests=tests
             -Dsonar.test.inclusions=tests/**/*
-            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+            -Dsonar.host.url=${{ inputs.SONAR_HOST_URL }}
+            -Dsonar.login=${{ inputs.SONAR_TOKEN }}
             -Dsonar.language=php,javascript
             -Dsonar.php.coverage.reportPaths=build/logs/coverage.xml
 

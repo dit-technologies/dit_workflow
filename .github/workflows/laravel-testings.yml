@@ -108,7 +108,7 @@ jobs:
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
             -Dsonar.organization=dit-technologies
             -Dsonar.sources=.
-            -Dsonar.exclusions=vendor/**
+            -Dsonar.exclusions=vendor/**,node_modules/**,laradock/**
             -Dsonar.tests=tests
             -Dsonar.test.inclusions=tests/**/*
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}

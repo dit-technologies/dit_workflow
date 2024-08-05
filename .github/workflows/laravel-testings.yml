@@ -76,6 +76,46 @@ jobs:
         run: |
           ./vendor/bin/pint --test ${{ steps.changed-files.outputs.all_changed_files }}
 
-      - name: Run PHPUnit Tests
+      - name: Generate Coverage Report
         run: |
-          php artisan test || true
+          mkdir -p build/logs
+          ./vendor/bin/phpunit --coverage-clover=build/logs/coverage.xml
+
+      - name: Cache SonarQube dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar-cache
+          restore-keys: ${{ runner.os }}-sonar-cache
+
+
+      # Triggering SonarQube analysis as results of it are required by Quality Gate check.
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          args: >
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
+            -Dsonar.organization=dit-technologies
+            -Dsonar.sources=.
+            -Dsonar.exclusions=vendor/**
+            -Dsonar.tests=tests
+            -Dsonar.test.inclusions=tests/**/*
+            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+            -Dsonar.language=php,javascript
+            -Dsonar.php.coverage.reportPaths=build/logs/coverage.xml
+
+      # Check the Quality Gate status.
+      - name: SonarQube Quality Gate check
+        id: sonarqube-quality-gate-check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        # Force to fail step after specific time.
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      - name: Display SonarQube Quality Gate Status
+        run: echo "The Quality Gate status is ${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}"

@@ -23,18 +23,6 @@ on:
         required: false
         type: string
         description: "Node.js version to use if Node.js steps are enabled"
-      sonar_token:
-        required: true
-        type: string
-        description: "SonarQube authentication token"
-      sonar_host_url:
-        required: true
-        type: string
-        description: "SonarQube server URL"
-      sonar_project_key:
-        required: true
-        type: string
-        description: "SonarQube project key"
 
 jobs:
   tests:

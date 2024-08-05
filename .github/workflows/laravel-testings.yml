@@ -23,6 +23,7 @@ on:
         required: false
         type: string
         description: "Node.js version to use if Node.js steps are enabled"
+      
 
 jobs:
   tests:
@@ -121,5 +122,8 @@ jobs:
         uses: sonarsource/sonarqube-quality-gate-action@master
         # Force to fail step after specific time.
         timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       - name: Display SonarQube Quality Gate Status
         run: echo "The Quality Gate status is ${{ steps.sonarqube-quality-gate-check.outputs.quality-gate-status }}"

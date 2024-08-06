@@ -84,7 +84,7 @@ jobs:
         run: |
           ./vendor/bin/pint --test ${{ steps.changed-files.outputs.all_changed_files }}
 
-      - name: Generate Coverage Report
+      - name: Generate Test Coverage Report
         run: |
           mkdir -p build/logs
           ./vendor/bin/phpunit --coverage-clover=build/logs/coverage.xml || true
@@ -115,6 +115,7 @@ jobs:
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
             -Dsonar.language=php,javascript
             -Dsonar.php.coverage.reportPaths=build/logs/coverage.xml
+            -Dsonar.coverage.exclusions=**/*.*
 
       # Check the Quality Gate status.
       - name: SonarQube Quality Gate check

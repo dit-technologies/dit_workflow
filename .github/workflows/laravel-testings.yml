@@ -115,7 +115,7 @@ jobs:
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
             -Dsonar.language=php,javascript
             -Dsonar.php.coverage.reportPaths=build/logs/coverage.xml
-            -Dsonar.coverage.exclusions=**/*.*
+            -Dsonar.coverage.exclusions=vendor/**,node_modules/**,laradock/**
 
       # Check the Quality Gate status.
       - name: SonarQube Quality Gate check
